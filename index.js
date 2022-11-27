@@ -2,6 +2,8 @@
 const express = require('express');
 // Add cors
 const cors = require('cors');
+// Add mongodb
+const { MongoClient, ServerApiVersion } = require('mongodb');
 // Require dotenv & call config
 require('dotenv').config();
 // Initialize express
@@ -17,7 +19,11 @@ app.use(cors());
 app.use(express.json());
 
 
+// Connection string
+// Set username & password dynamically using process.env.
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.twsrnvr.mongodb.net/?retryWrites=true&w=majority`;
 
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 
 // Create GET request to test
