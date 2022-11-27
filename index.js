@@ -30,7 +30,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         // Create database & collection
-        const appointmentOptionCollection = client.db('swapLap').collection('bannerCollection');
+        const bannerCollection = client.db('swapLap').collection('banner');
 
 
         // Create a get API to load data from the database (find operation)
@@ -51,10 +51,10 @@ run().catch(error => console.error(error));
 
 // Create GET request to test
 app.get('/', (req, res) => {
-    res.send("Doctors Portal server is running");
+    res.send("Swaplap server is running");
 });
 
 // Initialize server
 app.listen(port, () => {
-    console.log(`Doctors Portal server is running on port ${port}`);
+    console.log(`Swaplap server is running on port ${port}`);
 });
