@@ -31,6 +31,14 @@ async function run() {
     try {
         // Create database & collection
         const appointmentOptionCollection = client.db('swapLap').collection('bannerCollection');
+
+
+        // Create a get API to load data from the database (find operation)
+        app.get('/banner', async (req, res) => {
+            const query = {};
+            const banner = await bannerCollection.find(query).toArray();
+            res.send(banner);
+        })
     }
     finally {
 
