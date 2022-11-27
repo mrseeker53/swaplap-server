@@ -31,13 +31,21 @@ async function run() {
     try {
         // Create database & collection
         const bannerCollection = client.db('swapLap').collection('banner');
+        const categoryCollection = client.db('swapLap').collection('category');
 
 
-        // Create a get API to load data from the database (find operation)
+        // Create a get API to load banner data from the database (find operation)
         app.get('/banner', async (req, res) => {
             const query = {};
             const banner = await bannerCollection.find(query).toArray();
             res.send(banner);
+        });
+
+        // Create a get API to load category data
+        app.get('/', async (req, res) => {
+            const query = {};
+            const home = await categoryCollection.find(query).toArray();
+            res.send(home);
         })
     }
     finally {
