@@ -26,6 +26,21 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 
+// Insert documented data as collection to the database
+async function run() {
+    try {
+        // Create database & collection
+        const appointmentOptionCollection = client.db('swapLap').collection('bannerCollection');
+    }
+    finally {
+
+    }
+}
+
+// Call the function with catch
+run().catch(error => console.error(error));
+
+
 // Create GET request to test
 app.get('/', (req, res) => {
     res.send("Doctors Portal server is running");
