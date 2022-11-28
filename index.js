@@ -3,7 +3,7 @@ const express = require('express');
 // Add cors
 const cors = require('cors');
 // Add mongodb
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 // Require dotenv & call config
 require('dotenv').config();
 // Initialize express
@@ -32,6 +32,7 @@ async function run() {
         // Create database & collection
         const bannerCollection = client.db('swapLap').collection('banner');
         const categoryCollection = client.db('swapLap').collection('category');
+        const productCollection = client.db('swapLap').collection('product');
 
 
         // Create a get API to load banner data from the database (find operation)
@@ -42,10 +43,18 @@ async function run() {
         });
 
         // Create a get API to load category data
-        app.get('/', async (req, res) => {
+        app.get('/category', async (req, res) => {
             const query = {};
-            const home = await categoryCollection.find(query).toArray();
-            res.send(home);
+            const categories = await categoryCollection.find(query).toArray();
+            res.send(categories);
+        });
+
+        // Create a get API to load category/:id data from productCollection
+        app.get('/category/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { categoryId: id };
+            const products = await productCollection.find(query).toArray();
+            res.send(products);
         })
     }
     finally {
