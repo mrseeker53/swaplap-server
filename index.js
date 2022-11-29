@@ -4,6 +4,8 @@ const express = require('express');
 const cors = require('cors');
 // Add mongodb
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+// Add json web token
+const jwt = require('jsonwebtoken');
 // Require dotenv & call config
 require('dotenv').config();
 // Initialize express
@@ -34,6 +36,26 @@ async function run() {
         const categoryCollection = client.db('swapLap').collection('category');
         const productCollection = client.db('swapLap').collection('product');
         const usersCollection = client.db('swapLap').collection('users');
+
+
+        // Create a get API to generate a token (jwt)
+        app.get('/jwt', async (req, res) => {
+            // Get email from the requested query.email (client side)
+            const email = req.query.email;
+            // Set query for email
+            const query = { email: email };
+            // Find by query from the collection (findOne operation)
+            const user = await usersCollection.findOne(query);
+            // Check the user is valid
+            if (user) {
+                // Create a token with payload (for email), secretKey (with this key format) & jwt.secret (expires in time)
+                const token = jwt.sign({ email }, process.env.ACCESS_TOKEN, { expiresIn: '1h' });
+                // Send the token
+                return res.send({ accessToken: token });
+            }
+            // Send empty object with status for invalid user
+            res.status(403).send({ accessToken: '' });
+        });
 
 
         // READ::
