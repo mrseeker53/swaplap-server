@@ -33,8 +33,10 @@ async function run() {
         const bannerCollection = client.db('swapLap').collection('banner');
         const categoryCollection = client.db('swapLap').collection('category');
         const productCollection = client.db('swapLap').collection('product');
+        const usersCollection = client.db('swapLap').collection('users');
 
 
+        // READ::
         // Create a get API to load banner data from the database (find operation)
         app.get('/banner', async (req, res) => {
             const query = {};
@@ -55,7 +57,19 @@ async function run() {
             const query = { categoryId: id };
             const products = await productCollection.find(query).toArray();
             res.send(products);
-        })
+        });
+
+
+        // CREATE::
+        // Create a post API to send data to the database (insert operation)
+        app.post('/users', async (req, res) => {
+            // Get data from requested body (client side)
+            const user = req.body;
+            // Insert data into the collection
+            const result = await usersCollection.insertOne(user);
+            // Send data with create confirmation
+            res.send(result);
+        });
     }
     finally {
 
