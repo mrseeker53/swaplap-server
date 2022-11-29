@@ -59,6 +59,13 @@ async function run() {
             res.send(products);
         });
 
+        // Create a get API to load data from the database
+        app.get('/users', async (req, res) => {
+            const query = {};
+            const users = await usersCollection.find(query).toArray();
+            res.send(users);
+        });
+
 
         // CREATE::
         // Create a post API to send data to the database (insert operation)
