@@ -28,6 +28,31 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 
+// Create a function as middleware to verify JWT token
+function verifyJWT(req, res, next) {
+    // Set the auth header from headers > authorization
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        // If the auth header is not found, return status & message
+        return res.status(401).send('unauthorized access');
+    }
+    // Split the auth token with white space & take the second index item
+    const token = authHeader.split(' ')[1];
+
+    // Verify jwt token with token, secret key & call function with error & decoded (value)
+    jwt.verify(token, process.env.ACCESS_TOKEN, function (error, decoded) {
+        if (error) {
+            // If error is found, return status & message
+            return res.status(403).send({ message: 'forbidden access' })
+        }
+        // If error is not found, add decoded with request
+        req.decoded = decoded;
+        // Call the next()
+        next();
+    })
+}
+
+
 // Insert documented data as collection to the database
 async function run() {
     try {
@@ -74,7 +99,7 @@ async function run() {
         });
 
         // Create a get API to load category/:id data from productCollection
-        app.get('/category/:id', async (req, res) => {
+        app.get('/category/:id', verifyJWT, async (req, res) => {
             const id = req.params.id;
             const query = { categoryId: id };
             const products = await productCollection.find(query).toArray();
