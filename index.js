@@ -106,13 +106,6 @@ async function run() {
             res.send(products);
         });
 
-        // Create a get API to load data from the database
-        app.get('/users', async (req, res) => {
-            const query = {};
-            const users = await usersCollection.find(query).toArray();
-            res.send(users);
-        });
-
         // Create a get API to check the buyer role
         app.get('/users/buyer/:email', async (req, res) => {
             const email = req.params.email;
@@ -135,6 +128,20 @@ async function run() {
             const query = { email };
             const user = await usersCollection.findOne(query);
             res.send({ isAdmin: user?.role === 'admin' });
+        });
+
+        // Create a get API to load buyer data
+        app.get('/dashboard/allbuyers', async (req, res) => {
+            const query = { role: 'buyer' };
+            const users = await usersCollection.find(query).toArray();
+            res.send(users);
+        });
+
+        // Create a get API to load seller data
+        app.get('/dashboard/allsellers', async (req, res) => {
+            const query = { role: 'seller' };
+            const users = await usersCollection.find(query).toArray();
+            res.send(users);
         });
 
 
