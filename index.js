@@ -140,6 +140,35 @@ async function run() {
             // Send data with create confirmation
             res.send(result);
         });
+
+
+        // UPDATE::
+        // Create a put API to update data
+        app.put('/users/admin/:id', verifyJWT, async (req, res) => {
+            // Get email from request > decoded > email
+            const decodedEmail = req.decoded.email;
+            // Set query
+            const query = { email: decodedEmail };
+            // Find One by query from the users collection
+            const user = await usersCollection.findOne(query);
+
+            if (user?.role !== 'admin') {
+                return res.status(403).send({ message: 'forbidden access' })
+            }
+
+            // Get id from requested params id
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    role: 'admin'
+                }
+            }
+            // Update One by filter, updatedDoc & options from the users collection
+            const result = await usersCollection.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        })
     }
     finally {
 
