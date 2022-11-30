@@ -113,10 +113,18 @@ async function run() {
             res.send(users);
         });
 
-        // Create a get API to check the user role
-        app.get('/users/admin/:email', async (req, res) => {
-            const email = req.params.email;
-            const query = { email };
+        // Create a get API to check the seller role
+        app.get('/users/seller/:role', async (req, res) => {
+            const role = req.params.role;
+            const query = { role };
+            const user = await usersCollection.findOne(query);
+            res.send({ isAdmin: user?.role === 'seller' });
+        })
+
+        // Create a get API to check the admin role
+        app.get('/users/admin/:role', async (req, res) => {
+            const role = req.params.role;
+            const query = { role };
             const user = await usersCollection.findOne(query);
             res.send({ isAdmin: user?.role === 'admin' });
         })
