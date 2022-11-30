@@ -119,7 +119,7 @@ async function run() {
             const query = { email };
             const user = await usersCollection.findOne(query);
             res.send({ isBuyer: user?.role === 'buyer' });
-        })
+        });
 
         // Create a get API to check the seller role
         app.get('/users/seller/:email', async (req, res) => {
@@ -127,7 +127,7 @@ async function run() {
             const query = { email };
             const user = await usersCollection.findOne(query);
             res.send({ isSeller: user?.role === 'seller' });
-        })
+        });
 
         // Create a get API to check the admin role
         app.get('/users/admin/:email', async (req, res) => {
@@ -135,7 +135,7 @@ async function run() {
             const query = { email };
             const user = await usersCollection.findOne(query);
             res.send({ isAdmin: user?.role === 'admin' });
-        })
+        });
 
 
         // CREATE::
