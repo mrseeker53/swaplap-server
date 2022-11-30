@@ -61,6 +61,7 @@ async function run() {
         const categoryCollection = client.db('swapLap').collection('category');
         const productCollection = client.db('swapLap').collection('product');
         const usersCollection = client.db('swapLap').collection('users');
+        const bookingCollection = client.db('swapLap').collection('bookings');
 
 
         // Create a get API to generate a token (jwt)
@@ -130,6 +131,13 @@ async function run() {
             res.send({ isAdmin: user?.role === 'admin' });
         });
 
+        // Create a get API to load buyer data for seller
+        app.get('/dashboard/mybuyers', async (req, res) => {
+            const query = { role: 'buyer' };
+            const users = await bookingCollection.find(query).toArray();
+            res.send(users);
+        });
+
         // Create a get API to load buyer data
         app.get('/dashboard/allbuyers', async (req, res) => {
             const query = { role: 'buyer' };
@@ -155,6 +163,13 @@ async function run() {
             // Send data with create confirmation
             res.send(result);
         });
+
+        // Send data to the booking collection
+        app.post('/bookings', async (req, res) => {
+            const booking = req.body;
+            const result = await bookingCollection.insertOne(booking);
+            res.send(result);
+        })
 
 
         // UPDATE::
