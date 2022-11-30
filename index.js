@@ -62,6 +62,7 @@ async function run() {
         const productCollection = client.db('swapLap').collection('product');
         const usersCollection = client.db('swapLap').collection('users');
         const bookingCollection = client.db('swapLap').collection('bookings');
+        const myProductCollection = client.db('swapLap').collection('myproduct');
 
 
         // Create a get API to generate a token (jwt)
@@ -138,6 +139,12 @@ async function run() {
             res.send(users);
         });
 
+        app.get('/dashboard/myproducts', async (req, res) => {
+            const query = {};
+            const products = await myProductCollection.find(query).toArray();
+            res.send(products);
+        });
+
         // Create a get API to load buyer data
         app.get('/dashboard/allbuyers', async (req, res) => {
             const query = { role: 'buyer' };
@@ -168,6 +175,13 @@ async function run() {
         app.post('/bookings', async (req, res) => {
             const booking = req.body;
             const result = await bookingCollection.insertOne(booking);
+            res.send(result);
+        })
+
+        // Send data to the myproduct collection
+        app.post('/dashboard/myproducts', async (req, res) => {
+            const product = req.body;
+            const result = await myProductCollection.insertOne(product);
             res.send(result);
         })
 
