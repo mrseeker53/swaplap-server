@@ -113,6 +113,14 @@ async function run() {
             res.send(users);
         });
 
+        // Create a get API to check the user role
+        app.get('/users/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email };
+            const user = await usersCollection.findOne(query);
+            res.send({ isAdmin: user?.role === 'admin' });
+        })
+
 
         // CREATE::
         // Create a post API to send data to the database (insert operation)
