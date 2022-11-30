@@ -133,7 +133,7 @@ async function run() {
 
         // Create a get API to load buyer data for seller
         app.get('/dashboard/mybuyers', async (req, res) => {
-            const query = { role: 'buyer' };
+            const query = {};
             const users = await bookingCollection.find(query).toArray();
             res.send(users);
         });
