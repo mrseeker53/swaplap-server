@@ -101,7 +101,7 @@ async function run() {
         });
 
         // Create a get API to load category/:id data from productCollection
-        app.get('/category/:id', verifyJWT, async (req, res) => {
+        app.get('/category/:id', async (req, res) => {
             const id = req.params.id;
             const query = { categoryId: id };
             const products = await productCollection.find(query).toArray();
@@ -130,6 +130,14 @@ async function run() {
             const query = { email };
             const user = await usersCollection.findOne(query);
             res.send({ isAdmin: user?.role === 'admin' });
+        });
+
+        // Create a get API to load booking data
+        app.get('/dashboard/myorders/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email };
+            const orders = await bookingCollection.find(query).toArray();
+            res.send(orders);
         });
 
         // Create a get API to load buyer data for seller
@@ -178,7 +186,7 @@ async function run() {
             res.send(result);
         })
 
-        // Send data to the myproduct collection
+        // Send data to the myProduct collection
         app.post('/dashboard/myproducts', async (req, res) => {
             const product = req.body;
             const result = await myProductCollection.insertOne(product);
